@@ -2,8 +2,6 @@ name: Import NQX source
 
 on:
   push:
-    paths:
-      - 'NQX-v10.3-final.zip'
 
 permissions:
   contents: write
@@ -17,11 +15,15 @@ jobs:
 
       - name: Extract NQX v10.3 final
         run: |
+          if [ ! -f NQX-v10.3-final-UPLOAD.zip ]; then
+            echo "No archive found. Nothing to import."
+            exit 0
+          fi
           rm -rf /tmp/nqx-unpack
           mkdir -p /tmp/nqx-unpack
-          unzip -q NQX-v10.3-final.zip -d /tmp/nqx-unpack
+          unzip -q NQX-v10.3-final-UPLOAD.zip -d /tmp/nqx-unpack
           cp -a /tmp/nqx-unpack/NQX-v10.3-final/. .
-          rm -f NQX-v10.3-final.zip
+          rm -f NQX-v10.3-final-UPLOAD.zip
 
       - name: Commit imported source
         run: |
