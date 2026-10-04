@@ -1,0 +1,140 @@
+
+> nqx-pwa@10.3.0 test
+> node --test
+
+TAP version 13
+# Subtest: TRACE is exactly 666, unique and one record per TRACE
+ok 1 - TRACE is exactly 666, unique and one record per TRACE
+  ---
+  duration_ms: 0.918394
+  type: 'test'
+  ...
+# Subtest: trace discovery cannot blank on an already owned trace
+ok 2 - trace discovery cannot blank on an already owned trace
+  ---
+  duration_ms: 0.441288
+  type: 'test'
+  ...
+# Subtest: information strength follows frozen formula and class thresholds
+ok 3 - information strength follows frozen formula and class thresholds
+  ---
+  duration_ms: 1.195265
+  type: 'test'
+  ...
+# Subtest: player parameter display reveals only the current class observation ceiling
+ok 4 - player parameter display reveals only the current class observation ceiling
+  ---
+  duration_ms: 0.272497
+  type: 'test'
+  ...
+# Subtest: v10 reload scaling bug is repaired without deleting the active aberrant
+ok 5 - v10 reload scaling bug is repaired without deleting the active aberrant
+  ---
+  duration_ms: 1.420412
+  type: 'test'
+  ...
+# Subtest: current-schema low ability values are normalized but never rescaled
+ok 6 - current-schema low ability values are normalized but never rescaled
+  ---
+  duration_ms: 0.262928
+  type: 'test'
+  ...
+# Subtest: battle is deterministic for identical snapshots and seed
+ok 7 - battle is deterministic for identical snapshots and seed
+  ---
+  duration_ms: 2.530645
+  type: 'test'
+  ...
+# Subtest: CPU loss continues lineage but lifespan/PvP style reasons terminate
+ok 8 - CPU loss continues lineage but lifespan/PvP style reasons terminate
+  ---
+  duration_ms: 0.3659
+  type: 'test'
+  ...
+# Subtest: legacy migration converts 99-scale stats, origin and legacy fragments without deletion
+ok 9 - legacy migration converts 99-scale stats, origin and legacy fragments without deletion
+  ---
+  duration_ms: 0.37126
+  type: 'test'
+  ...
+# Subtest: monetization entitlements match frozen 250/500 plans
+ok 10 - monetization entitlements match frozen 250/500 plans
+  ---
+  duration_ms: 0.440621
+  type: 'test'
+  ...
+# Subtest: a newly observed aberrant cannot begin as DOMINION or UNKNOWN
+ok 11 - a newly observed aberrant cannot begin as DOMINION or UNKNOWN
+  ---
+  duration_ms: 9.498196
+  type: 'test'
+  ...
+# Subtest: new aberrant always uses supported type and required fields
+ok 12 - new aberrant always uses supported type and required fields
+  ---
+  duration_ms: 0.323404
+  type: 'test'
+  ...
+# Subtest: PvP destructive result requires matching result confirmation and ACK handshake
+ok 13 - PvP destructive result requires matching result confirmation and ACK handshake
+  ---
+  duration_ms: 7.077663
+  type: 'test'
+  ...
+# Subtest: CREATOR designation is not revealed before TRACE 666
+ok 14 - CREATOR designation is not revealed before TRACE 666
+  ---
+  duration_ms: 0.495522
+  type: 'test'
+  ...
+# Subtest: EXTERNAL OBSERVATION is a live action: it records code use, consumes action life and changes the active aberrant
+ok 15 - EXTERNAL OBSERVATION is a live action: it records code use, consumes action life and changes the active aberrant
+  ---
+  duration_ms: 3.43028
+  type: 'test'
+  ...
+# Subtest: SLEEP is timestamp based and resolves after sixty minutes without a background timer
+ok 16 - SLEEP is timestamp based and resolves after sixty minutes without a background timer
+  ---
+  duration_ms: 0.49366
+  type: 'test'
+  ...
+# Subtest: CPU BATTLE action produces three turns and applies a confirmed win result to state
+ok 17 - CPU BATTLE action produces three turns and applies a confirmed win result to state
+  ---
+  duration_ms: 0.825153
+  type: 'test'
+  ...
+# Subtest: PLAY controls are integrated into the observation field and not fixed to the bottom
+ok 18 - PLAY controls are integrated into the observation field and not fixed to the bottom
+  ---
+  duration_ms: 0.815572
+  type: 'test'
+  ...
+# Subtest: PLAY advertisement remains outside the observation field
+ok 19 - PLAY advertisement remains outside the observation field
+  ---
+  duration_ms: 0.194196
+  type: 'test'
+  ...
+# Subtest: PLAY exposes live OBSERVE / BATTLE / SLEEP action handlers
+ok 20 - PLAY exposes live OBSERVE / BATTLE / SLEEP action handlers
+  ---
+  duration_ms: 0.195635
+  type: 'test'
+  ...
+# Subtest: adopted field background is integrated without intercepting input
+ok 21 - adopted field background is integrated without intercepting input
+  ---
+  duration_ms: 0.109698
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 98.064309

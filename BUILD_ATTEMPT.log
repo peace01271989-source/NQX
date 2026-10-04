@@ -1,0 +1,5 @@
+NQX v10.3 build attempt
+Command: npm install --prefer-offline --no-audit --no-fund
+Result: timed out after 120 seconds in the execution environment.
+node_modules/.bin/vite: not present after timeout.
+Production build was therefore NOT claimed as complete.

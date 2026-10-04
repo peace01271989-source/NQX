@@ -1,0 +1,16 @@
+NQX v10.3 FINAL AUDIT
+PASS: TRACE 001-666 / 1 TRACE = 1 FRAGMENT
+PASS: CLASS display caps ABERRANT 332 / DOMINION 666 / UNKNOWN hidden ceiling
+PASS: v10 ability rescale repair retained
+PASS: PLAY field-integrated UI retained
+PASS: advertisement outside observation field
+PASS: OBSERVE live action path present
+PASS: BATTLE CPU/PvP paths present
+PASS: 3TURN progressive battle replay added
+PASS: SLEEP timestamp action path present
+PASS: adopted background integrated and non-interactive
+PASS: relative imports resolved
+PASS: JavaScript syntax checks
+PASS: automated tests 21/21
+NOTE: legacy ORIGIN / A-B-C TRACE strings remain only in migration tests by design
+UNVERIFIED: Vite production build (npm install timed out in execution environment)
