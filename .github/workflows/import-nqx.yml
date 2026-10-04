@@ -1,0 +1,34 @@
+name: Import NQX source
+
+on:
+  push:
+    paths:
+      - 'NQX-v10.3-final.zip'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract NQX v10.3 final
+        run: |
+          rm -rf /tmp/nqx-unpack
+          mkdir -p /tmp/nqx-unpack
+          unzip -q NQX-v10.3-final.zip -d /tmp/nqx-unpack
+          cp -a /tmp/nqx-unpack/NQX-v10.3-final/. .
+          rm -f NQX-v10.3-final.zip
+
+      - name: Commit imported source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Import NQX v10.3 final source"
+            git push
+          fi
