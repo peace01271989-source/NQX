@@ -7,7 +7,7 @@ export default defineConfig({
   base,
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png', 'nqx-field-bg.webp'],
       manifest: {
         name: 'NQX',
