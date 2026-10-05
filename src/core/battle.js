@@ -1,4 +1,4 @@
-import '../battle-upgrade.css';
+import '../battle-upgrade.js';
 import { TYPE_DEFS, TYPE_BY_ID } from './config.js';
 import { seeded, int, weighted, clamp, chance, pick } from './rng.js';
 import { informationStrength, refreshClass } from './information.js';
