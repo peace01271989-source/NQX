@@ -18,11 +18,15 @@ function stateMods(q){
     variance:s==='unstable'?1.35:1
   };
 }
+function hiddenCombat(q){
+  if(Number.isFinite(Number(q.hiddenCombat)))return clamp(Number(q.hiddenCombat),0,1332);
+  return clamp(Number(q.hidden?.INSTINCT??0)+Number(q.hidden?.MUTATION??0),0,1332);
+}
 export function makeBattleSnapshot(q){
   refreshClass(q);
   return {
     id:q.id, uid:q.uid, name:q.name, type:q.type, class:q.class, informationStrength:informationStrength(q),
-    abilities:{...q.abilities}, hidden:{...q.hidden}, state:q.state, anomaly:q.anomaly, integration:q.integration,
+    abilities:{...q.abilities}, hiddenCombat:hiddenCombat(q), state:q.state, anomaly:q.anomaly, integration:q.integration,
     morphology:{...q.morphology}, visualSeed:q.visualSeed, visual:{...q.visual}, nonce:cryptoRandom()
   };
 }
@@ -31,9 +35,9 @@ function cryptoRandom(){
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 }
 function battlePotential(q){
-  const a=q.abilities||{},h=q.hidden||{};
+  const a=q.abilities||{};
   const state=q.state==='excited'?1.05:q.state==='stable'?1:q.state==='unstable'?.96:q.state==='tired'?.9:q.state==='terminal'?.84:1;
-  const base=(informationStrength(q)*.34)+((a.POWER??0)*.18)+((a.SPEED??0)*.12)+((a.ABSORB??0)*.14)+((a.ADAPT??0)*.12)+((a.GUARD??0)*.06)+((h.INSTINCT??0)*.02)+((h.MUTATION??0)*.02);
+  const base=(informationStrength(q)*.34)+((a.POWER??0)*.18)+((a.SPEED??0)*.12)+((a.ABSORB??0)*.14)+((a.ADAPT??0)*.12)+((a.GUARD??0)*.06)+(hiddenCombat(q)*.02);
   return Math.max(1,base*state);
 }
 function breakthroughChance(a,b){
@@ -55,6 +59,10 @@ function breakthroughOutlook(a,b){
   return 'CRITICAL / 極めて危険';
 }
 export function generateCpuOpponent(q,state,now=Date.now()){
+  state.cpu??={daily:{},cooldownUntil:0,pendingOpponent:null};
+  const pending=state.cpu.pendingOpponent;
+  if(pending?.expiresAt>now && pending?.opponent)return pending.opponent;
+
   const key=new Date(now).toISOString().slice(0,10); state.cpu.daily[key]??={observed:0,battled:0}; const count=++state.cpu.daily[key].observed;
   const rng=seeded(`${q.uid}|cpu|${count}|${key}|${now}`);
   let bands=[
@@ -84,6 +92,7 @@ export function generateCpuOpponent(q,state,now=Date.now()){
   refreshClass(opponent);
   if(opponent.class==='unknown'){ opponent.class='dominion'; opponent.anomaly=Math.min(200,opponent.anomaly); refreshClass(opponent); }
   opponent.risk=breakthroughOutlook(q,opponent);
+  state.cpu.pendingOpponent={expiresAt:now+10*60*1000,opponent};
   return opponent;
 }
 export function canEncounterCpuUnknown(q,state,rng=Math.random){
@@ -93,18 +102,21 @@ export function canEncounterCpuUnknown(q,state,rng=Math.random){
   return rng()<.005;
 }
 export function generateCpuUnknown(q,state,now=Date.now()){
+  state.cpu??={daily:{},cooldownUntil:0,pendingOpponent:null};
+  const pending=state.cpu.pendingOpponent;
+  if(pending?.expiresAt>now && pending?.opponent)return pending.opponent;
   const rng=seeded(`${q.uid}|UNKNOWN|${state.traces.join(',')}|${now}`); const base=690+int(rng,0,320);
   const per=Math.min(666,Math.round(base/1.15));
   const x={id:'UNDEFINED',uid:`unknown-${now}`,name:'',type:weighted(rng,TYPE_DEFS.map(t=>({...t,weight:t.rate}))).id,class:'unknown',
   abilities:{LIFE:per,POWER:per,GUARD:per,SPEED:per,ABSORB:per,ADAPT:per},hidden:{POTENTIAL:600,DECAY:500,MUTATION:620,INSTINCT:640},
   integration:260,anomaly:280,state:'unstable',morphology:{membrane:20,tendrils:65,shell:15,crystal:40,asymmetry:95,fragments:80,glow:99},visualSeed:int(rng,1,2**30),visual:{coreHue:225,glowHue:0,asymmetry:-1},risk:'UNDEFINED / 解析不能'};
-  refreshClass(x); return x;
+  refreshClass(x);state.cpu.pendingOpponent={expiresAt:now+10*60*1000,opponent:x};return x;
 }
 function vital(q){return 180+(q.abilities.LIFE??0)*.9+(q.abilities.GUARD??0)*.45}
 function phaseBreakChance(a,b){
   const diff=Math.abs(informationStrength(a)-informationStrength(b));
   let p=diff<100?0:diff<200?.01:diff<300?.02:.03;
-  p*=1+((a.hidden?.INSTINCT??0)+(a.hidden?.MUTATION??0)+(a.abilities?.ADAPT??0))/1998;
+  p*=1+(hiddenCombat(a)+(a.abilities?.ADAPT??0))/1998;
   if(a.state==='unstable'||a.state==='terminal')p*=1.2;return Math.min(.08,p);
 }
 function hit(att,def,rng,phaseBreak=false){
@@ -143,7 +155,7 @@ export function resolveBattle(aSnap,bSnap,seedExtra=''){
   return {winner,turns,seed,aVital:Math.max(0,av),bVital:Math.max(0,bv),mode:'breakthrough'};
 }
 export function applyCpuBattleResult(state,opponent,result,rng=Math.random){
-  const q=state.q; state.cpu.daily[new Date().toISOString().slice(0,10)].battled++; consumeAction(q,2); applyGrowth(q,2+Math.floor(rng()*3),'battle');
+  const q=state.q; state.cpu.daily[new Date().toISOString().slice(0,10)]??={observed:0,battled:0};state.cpu.daily[new Date().toISOString().slice(0,10)].battled++;state.cpu.pendingOpponent=null; consumeAction(q,2); applyGrowth(q,2+Math.floor(rng()*3),'battle');
   if(result.winner==='A'){
     q.battle.wins++;q.battle.cpuWins++;q.integration=clamp(q.integration+Math.max(2,Math.round(informationStrength(opponent)*.04)),0,666);
     const k=pick(rng,Object.keys(q.abilities));q.abilities[k]=clamp(q.abilities[k]+2+Math.floor(rng()*8),0,666);
