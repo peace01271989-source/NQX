@@ -25,15 +25,15 @@ export function extendLifeFromIntegration(q, defeatedStrength=100, rng=Math.rand
   const hours=Math.max(2,Math.min(28,(defeatedStrength/50 + 2 + rng()*5)*efficiency));
   q.lifeEndsAt += hours*3600000;
   if(q.class==='unknown'){
+    if(!q.unknownEndsAt)q.unknownEndsAt=Date.now()+24*3600000;
     q.unknownEndsAt += Math.min(12,hours*.45)*3600000;
     q.unknownActionsRemaining=Math.min(48,(q.unknownActionsRemaining ?? 0)+Math.max(1,Math.floor(hours/4)));
   }
   return hours;
 }
 export function enterUnknownIfNeeded(q, now=Date.now(), rng=Math.random){
-  const before=q.class;
   refreshClass(q);
-  if(before!=='unknown' && q.class==='unknown' && !q.unknownEndsAt){
+  if(q.class==='unknown' && !q.unknownEndsAt){
     q.unknownEndsAt=now+(24+Math.floor(rng()*49))*3600000;
     q.unknownActionsRemaining=12+Math.floor(rng()*25);
     return true;
@@ -65,7 +65,7 @@ export function resolveSleep(q,now=Date.now(),early=false,rng=Math.random){
   q.fatigue=clamp((q.fatigue ?? 0)-Math.round(55*factor),0,100);
   q.instability=clamp((q.instability ?? 0)-Math.round(30*factor),0,100);
   q.growth=Math.min(100,q.growth+(early?0:1+Math.floor(rng()*2)));
-  q.actionLifeRemaining=Math.min(q.actionLifeMax,q.actionLifeRemaining+(early?0:(rng()<.5?1:0)));
+  // Frozen rule: normal actions, including sleep, never extend action lifespan.
   q.sleep.completedAt=now;
   updateState(q);
   return {early,growth:early?0:1};
