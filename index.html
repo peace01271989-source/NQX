@@ -7,9 +7,50 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>NQX</title>
+  <style>
+    .field-nav,.screen-nav,.record-tabs{pointer-events:auto!important;position:relative;z-index:50!important}
+    [data-screen],[data-record]{pointer-events:auto!important;touch-action:manipulation!important;-webkit-user-select:none;user-select:none;position:relative;z-index:51}
+  </style>
 </head>
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
+  <script>
+    (()=>{
+      const KEY='nqx.save';
+      let pending='';
+      const write=(kind,value)=>{
+        try{
+          const raw=localStorage.getItem(KEY);
+          if(!raw)return false;
+          const state=JSON.parse(raw);
+          if(kind==='screen')state.ui={...(state.ui||{}),screen:value};
+          else state.recordTab=value;
+          state.saveRevision=Number(state.saveRevision||0)+1;
+          state.updatedAt=Date.now();
+          localStorage.setItem(KEY,JSON.stringify(state));
+          return true;
+        }catch{return false}
+      };
+      const fallback=(target)=>{
+        const screenBtn=target.closest?.('[data-screen]');
+        const recordBtn=target.closest?.('[data-record]');
+        if(!screenBtn&&!recordBtn)return;
+        const kind=screenBtn?'screen':'record';
+        const value=(screenBtn?.dataset.screen||recordBtn?.dataset.record||'').toUpperCase();
+        const allowed=kind==='screen'?['PLAY','STATUS','RECORD']:['LINEAGE','HISTORY','TRACE'];
+        if(!allowed.includes(value))return;
+        const token=`${kind}:${value}:${Date.now()}`;pending=token;
+        setTimeout(()=>{
+          if(pending!==token)return;
+          const selector=kind==='screen'?`[data-screen="${value}"].active`:`[data-record="${value}"].active`;
+          if(document.querySelector(selector))return;
+          if(write(kind,value))location.reload();
+        },180);
+      };
+      document.addEventListener('pointerup',e=>fallback(e.target),true);
+      document.addEventListener('click',e=>fallback(e.target),true);
+    })();
+  </script>
 </body>
 </html>
