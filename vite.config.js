@@ -7,7 +7,7 @@ export default defineConfig({
   base,
   plugins: [
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png', 'nqx-field-bg.webp'],
       manifest: {
         name: 'NQX',
@@ -24,7 +24,12 @@ export default defineConfig({
           { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png' }
         ]
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,png,webp,svg,woff2}'] }
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,webp,svg,woff2}'],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true
+      }
     })
   ]
 });
