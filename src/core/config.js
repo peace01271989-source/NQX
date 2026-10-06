@@ -24,7 +24,7 @@ export const STATES = {
 export const CLASS_LABELS = { aberrant:'ABERRANT', dominion:'DOMINION', unknown:'UNKNOWN' };
 
 export const GROWTH_STAGE = growth => growth < 15 ? '卵' : growth < 40 ? '幼体' : growth < 75 ? '成体' : '成熟体';
-export const PLAY_SIZE = growth => growth < 15 ? 10 : growth < 40 ? 15 : growth < 75 ? 20 : 25;
+export const PLAY_SIZE = growth => growth < 15 ? 14 : growth < 40 ? 20 : growth < 75 ? 27 : 34;
 
 export const TRACE_PHASES = [
   { start:1, end:111, title:'観測対象' },
